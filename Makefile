@@ -1,8 +1,9 @@
 .PHONY: run
 
 run:
-	./bin/crispasr -m ./model/chatterbox-turbo \
+	./bin/crispasr -m ./model/chatterbox-turbo-t3-q8_0.gguf \
                 --backend chatterbox-turbo \
+                --codec-model ./model/chatterbox-turbo-s3gen-q8_0.gguf \
                 --voice ./input/johnlee_24k.wav \
                 --i-have-rights \
 		            --no-spoken-disclaimer --no-watermark --no-c2pa --accept-marking-responsibility \
