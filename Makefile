@@ -7,8 +7,8 @@ run:
                 --voice ./input/johnlee_24k.wav \
                 --i-have-rights \
 		            --no-spoken-disclaimer --no-watermark --no-c2pa --accept-marking-responsibility \
-                --tts "The sailor agreed, following Bathardish down and dogging the hatch behind him. You never know when the barbarians are going to go nuts." \
-                --tts-output ./output/out.wav
+                --tts "$$(cat ./scripts/caravan.txt)" \
+                --tts-output ./output/caravan.wav
 
 
 help:
