@@ -12,4 +12,7 @@ run:
 help:
 	./bin/crispasr --help
 
+conv:
+	ffmpeg -i ./input/input.mp4 -ar 16000 -ac 1 -c:a pcm_s16le ./input/johnlee.wav
+
 
