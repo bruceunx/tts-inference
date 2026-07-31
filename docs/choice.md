@@ -1,5 +1,5 @@
 ### MODELS
 
-1. CosyVoice 3.0
+1. chatterbox-turbo
 
-2. VoxCPM2
+2. indextts

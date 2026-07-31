@@ -9,6 +9,16 @@ run:
          --tts "The sailor agreed, following Bathardish down and dogging the hatch behind him. You never know when the barbarians are going to go nuts." \
          --tts-output ./output/out.wav
 
+chat:
+	time ./bin/crispasr -m ./model/chatterbox-turbo \
+		     --backend chatterbox-turbo \
+         --voice ./input/johnlee.wav \
+		     --i-have-rights \
+         --ref-text "cat then figured. The sailor agreed, following Bathardish down and dogging the hatch behind him. You never know when the barbarians are going to go nuts. I don't know how you fellas can take it. He assured, shaking his head. They had some bad ones you get to know them. Bathardish suggested, and the food is good if spicy, but it was time for us to go, for now. Where does the captain?" \
+         --tts "The sailor agreed, following Bathardish down and dogging the hatch behind him. You never know when the barbarians are going to go nuts." \
+         --tts-output ./output/out.wav
+
+
 help:
 	./bin/crispasr --help
 
