@@ -4,3 +4,5 @@ model/
 input/
 output/
 scripts/
+
+.DS_Store
