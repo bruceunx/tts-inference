@@ -6,9 +6,20 @@ run:
                 --codec-model ./model/chatterbox-turbo-s3gen-q8_0.gguf \
                 --voice ./input/johnlee_24k.wav \
                 --i-have-rights \
+                --temperature 0.8 \
 		            --no-spoken-disclaimer --no-watermark --no-c2pa --accept-marking-responsibility \
-                --tts "$$(cat ./scripts/caravan.txt)" \
-                --tts-output ./output/caravan.wav
+                --tts "$$(cat ./scripts/emotion.txt)" \
+                --tts-output ./output/emotion.wav
+
+s2:
+	./bin/s2 \
+		-m ./model/s2-pro-q4_k_m.gguf \
+		-t ./model/tokenizer.json \
+		-pa ./input/johnlee_24k.wav \
+		-pt "Transcript of the reference audio." \
+		-text "$$(cat ./scripts/emotion.txt)" \
+		--metal \
+		-o ./output/s2.wav
 
 
 help:
