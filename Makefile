@@ -4,7 +4,7 @@ run:
 	./bin/crispasr -m ./model/chatterbox-turbo-t3-q8_0.gguf \
                 --backend chatterbox-turbo \
                 --codec-model ./model/chatterbox-turbo-s3gen-q8_0.gguf \
-                --voice ./input/johnlee_24k.wav \
+                --voice ./input/dj.wav \
                 --i-have-rights \
 	              --no-prints \
                 --temperature 0.8 \
@@ -13,7 +13,7 @@ run:
                 --no-c2pa \
                 --accept-marking-responsibility \
                 --tts "$$(cat ./scripts/emotion.txt)" \
-                --tts-output ./output/chatterbox.wav
+                --tts-output ./output/chatterboxdj.wav
 
 
 zh:
@@ -56,8 +56,8 @@ zh3:
 		            --no-watermark \
                 --no-c2pa \
                 --accept-marking-responsibility \
-                --tts "$$(cat ./scripts/emotion.txt)" \
-                --tts-output ./output/emotionvox.wav
+                --tts "$$(cat ./scripts/mix.txt)" \
+                --tts-output ./output/mixvox.wav
 
 s2:
 	./bin/s2 \
@@ -75,6 +75,9 @@ help:
 
 sample16k:
 	ffmpeg -i ./input/input.mp4 -ar 16000 -ac 1 -c:a pcm_s16le ./input/johnlee.wav
+
+sample24k1:
+	ffmpeg -i ./dj.mp4 -ar 24000 -ac 1 -c:a pcm_s16le ./input/dj.wav
 
 sample24k:
 	ffmpeg -i ./input/johnlee.wav -ar 24000 -ac 1 ./input/johnlee_24k.wav
