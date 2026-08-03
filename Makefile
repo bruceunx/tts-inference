@@ -6,10 +6,29 @@ run:
                 --codec-model ./model/chatterbox-turbo-s3gen-q8_0.gguf \
                 --voice ./input/johnlee_24k.wav \
                 --i-have-rights \
+	              --no-prints \
                 --temperature 0.8 \
-		            --no-spoken-disclaimer --no-watermark --no-c2pa --accept-marking-responsibility \
+		            --no-spoken-disclaimer \
+		            --no-watermark \
+                --no-c2pa \
+                --accept-marking-responsibility \
                 --tts "$$(cat ./scripts/emotion.txt)" \
-                --tts-output ./output/emotion.wav
+                --tts-output ./output/mix.wav
+
+
+zh:
+	./bin/crispasr -m ./model/qwen3-tts-12hz-1.7b-base-q8_0.gguf \
+                --backend qwen3-tts-1.7b-base \
+                --voice ./input/johnlee_24k.wav \
+                --i-have-rights \
+		            --ref-text "Captain figured, the sailor agreed, following Bartharus down and dogging the hatch behind him. You never know when the barbarians are going to go nuts. I don't know how you fellas can take it, he assured, shaking his head. They aren't so bad once you get to know them, Bartharus suggested. And the food is good, if spicy. But it was time for us to go, for now. Where is the captain?" \
+	              --no-prints \
+		            --no-spoken-disclaimer \
+		            --no-watermark \
+                --no-c2pa \
+                --accept-marking-responsibility \
+                --tts "$$(cat ./scripts/emotion.txt)" \
+                --tts-output ./output/emotionqwen.wav
 
 s2:
 	./bin/s2 \
@@ -17,9 +36,9 @@ s2:
 		-t ./model/tokenizer.json \
 		-pa ./input/johnlee_24k.wav \
 		-pt "Transcript of the reference audio." \
-		-text "$$(cat ./scripts/emotion.txt)" \
+		-text "$$(cat ./scripts/mix.txt)" \
 		--metal \
-		-o ./output/s2.wav
+		-o ./output/mix.wav
 
 
 help:
@@ -45,3 +64,6 @@ mp3:
     -metadata artist="James A. Michener" \
     -metadata:s:v title="Caravan" \
     output.mp3
+
+
+# Captain figured, the sailor agreed, following Bartharus down and dogging the hatch behind him. You never know when the barbarians are going to go nuts. I don't know how you fellas can take it, he assured, shaking his head. They aren't so bad once you get to know them, Bartharus suggested. And the food is good, if spicy. But it was time for us to go, for now. Where is the captain?
