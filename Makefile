@@ -44,6 +44,21 @@ zh2:
                 --tts "$$(cat ./scripts/mix.txt)" \
                 --tts-output ./output/mixdarwin.wav
 
+
+zh3:
+	./bin/crispasr -m ./model/voxcpm2-q4_k.gguf \
+                --backend voxcpm2 \
+                --voice ./input/johnlee_24k.wav \
+                --i-have-rights \
+		            --ref-text "Captain figured, the sailor agreed, following Bartharus down and dogging the hatch behind him. You never know when the barbarians are going to go nuts. I don't know how you fellas can take it, he assured, shaking his head. They aren't so bad once you get to know them, Bartharus suggested. And the food is good, if spicy. But it was time for us to go, for now. Where is the captain?" \
+	              --no-prints \
+		            --no-spoken-disclaimer \
+		            --no-watermark \
+                --no-c2pa \
+                --accept-marking-responsibility \
+                --tts "$$(cat ./scripts/emotion.txt)" \
+                --tts-output ./output/emotionvox.wav
+
 s2:
 	./bin/s2 \
 		-m ./model/s2-pro-q4_k_m.gguf \
