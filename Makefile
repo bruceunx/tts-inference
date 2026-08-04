@@ -27,11 +27,13 @@ zh:
 		            --no-watermark \
                 --no-c2pa \
                 --accept-marking-responsibility \
-                --tts "$$(cat ./scripts/mix.txt)" \
-                --tts-output ./output/mixqwen.wav
+		            --temperature 0.4 \
+                --instruct "clear tone, crisp voice, bright studio articulation" \
+                --tts "$$(cat ./scripts/emotion.txt)" \
+                --tts-output ./output/emotionqwen.wav
 
-zh2:
-	./bin/crispasr -m ./model/darwin-tts-1.7b-cross-q4_k.gguf \
+zh1:
+	./bin/crispasr -m ./model/darwin-tts-1.7b-cross-q8_0.gguf \
                 --backend qwen3-tts \
                 --voice ./input/johnlee_24k.wav \
                 --i-have-rights \
@@ -41,13 +43,15 @@ zh2:
 		            --no-watermark \
                 --no-c2pa \
                 --accept-marking-responsibility \
-                --tts "$$(cat ./scripts/mix.txt)" \
-                --tts-output ./output/mixdarwin.wav
+		            --temperature 0.4 \
+                --instruct "clear tone, crisp voice, bright studio articulation" \
+                --tts "$$(cat ./scripts/emotion.txt)" \
+                --tts-output ./output/emotiondarwin.wav
 
 
-zh3:
-	./bin/crispasr -m ./model/voxcpm2-q4_k.gguf \
-                --backend voxcpm2 \
+zh2:
+	./bin/crispasr -m ./model/cosyvoice3-llm-q4_k.gguf \
+                --backend cosyvoice3-tts \
                 --voice ./input/johnlee_24k.wav \
                 --i-have-rights \
 		            --ref-text "Captain figured, the sailor agreed, following Bartharus down and dogging the hatch behind him. You never know when the barbarians are going to go nuts. I don't know how you fellas can take it, he assured, shaking his head. They aren't so bad once you get to know them, Bartharus suggested. And the food is good, if spicy. But it was time for us to go, for now. Where is the captain?" \
@@ -56,18 +60,11 @@ zh3:
 		            --no-watermark \
                 --no-c2pa \
                 --accept-marking-responsibility \
-                --tts "$$(cat ./scripts/mix.txt)" \
-                --tts-output ./output/mixvox.wav
+		            --temperature 0.4 \
+                --instruct "clear tone, crisp voice, bright studio articulation" \
+                --tts "$$(cat ./scripts/emotion.txt)" \
+                --tts-output ./output/emotioncosy.wav
 
-s2:
-	./bin/s2 \
-		-m ./model/s2-pro-q4_k_m.gguf \
-		-t ./model/tokenizer.json \
-		-pa ./input/johnlee_24k.wav \
-		-pt "Transcript of the reference audio." \
-		-text "$$(cat ./scripts/mix.txt)" \
-		--metal \
-		-o ./output/mix.wav
 
 
 help:
