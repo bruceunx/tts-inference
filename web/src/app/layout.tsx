@@ -19,11 +19,13 @@ export default function RootLayout({
   return (
     <html
       lang="en"
-      className={cn("h-full antialiased", "font-sans", geist.variable)}
       suppressHydrationWarning
+      className={cn("h-full antialiased", "font-sans", geist.variable)}
     >
       <body className="min-h-full flex flex-col">
-        <ThemeProvider>{children}</ThemeProvider>
+        <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
