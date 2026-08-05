@@ -42,9 +42,7 @@ export default async function RootLayout({
     >
       <body className="min-h-full flex flex-col">
         <NextIntlClientProvider>
-          <ThemeProvider attribute="class" defaultTheme="light" enableSystem>
-            {children}
-          </ThemeProvider>
+          <ThemeProvider>{children}</ThemeProvider>
         </NextIntlClientProvider>
       </body>
     </html>
