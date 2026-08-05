@@ -66,6 +66,16 @@ zh:
                 --tts-output ./output/chvox.wav
 
 
+s2:
+	./bin/s2 \
+		-m ./model/s2-pro-q2_k.gguf \
+		-t ./model/tokenizer.json \
+		-pa ./input/johnlee_24k.wav \
+		-pt "Captain figured, the sailor agreed, following Bartharus down and dogging the hatch behind him. You never know when the barbarians are going to go nuts. I don't know how you fellas can take it, he assured, shaking his head. They aren't so bad once you get to know them, Bartharus suggested. And the food is good, if spicy. But it was time for us to go, for now. Where is the captain?" \
+		-text "$$(cat ./scripts/emotion.txt)" \
+		--metal \
+		-o ./output/emotions2.wav
+
 
 help:
 	./bin/crispasr --help
