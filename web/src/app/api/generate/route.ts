@@ -7,6 +7,8 @@ import { MODEL_CONFIGS, type ModelId } from "@/lib/tts-config";
 
 export const runtime = "nodejs";
 
+const GENERATE_TIMEOUT_MS = 60_000;
+
 const BIN =
   process.env.CRISPASR_BIN ?? path.resolve(process.cwd(), "../bin/crispasr");
 const MODEL_DIR =
@@ -60,7 +62,7 @@ export async function POST(req: NextRequest) {
     args.push("--codec-model", path.join(MODEL_DIR, config.codecModel));
 
   try {
-    await run(BIN, args);
+    await run(BIN, args, GENERATE_TIMEOUT_MS);
     const audio = await readFile(outputPath);
     return new NextResponse(audio, {
       headers: {
@@ -75,8 +77,6 @@ export async function POST(req: NextRequest) {
     await Promise.allSettled([unlink(voicePath), unlink(outputPath)]);
   }
 }
-
-export const GENERATE_TIMEOUT_MS = 60_000;
 
 function run(bin: string, args: string[], timeoutMs: number) {
   return new Promise<void>((resolve, reject) => {

@@ -13,7 +13,7 @@ export function Workspace() {
   const [sample, setSample] = useState<VoiceSample | null>(null);
   const [recording, setRecording] = useState(false);
   const [script, setScript] = useState("");
-  const [model, setModel] = useState<ModelId>("core");
+  const [model, setModel] = useState<ModelId>("en");
   const [generating, setGenerating] = useState(false);
   const [result, setResult] = useState<Blob | null>(null);
   const [error, setError] = useState<string | null>(null);

@@ -14,7 +14,7 @@
     "titleAccent": "用你的声音。",
     "subtitle": "上传一段简短样本,写下文本,即可在你自己的硬件上,几秒内生成该声音的自然语音。",
     "badgeSpeed": "单卡 GPU 实时推理",
-    "badgeModels": "内置 3 种模型",
+    "badgeModels": "内置 2 种模型",
     "badgePrivacy": "样本不会离开本机"
   },
   "Workspace": {
@@ -43,20 +43,15 @@
     "generating": "生成中…"
   },
   "Models": {
-    "core": {
-      "name": "Core",
+    "en": {
+      "name": "英语",
       "tag": "快速稳定",
-      "desc": "针对日常草稿优化的低延迟推理。"
-    },
-    "pro": {
-      "name": "Pro",
-      "tag": "情感控制",
-      "desc": "更高保真度,可调节语气与表现力。"
+      "desc": "针对英语文本优化的低延迟推理。"
     },
     "multi": {
-      "name": "Multilingual",
-      "tag": "40+ 种语言",
-      "desc": "面向全球文本的跨语言克隆。"
+      "name": "英语 & 中文",
+      "tag": "双语",
+      "desc": "支持中英文文本的跨语言克隆。"
     }
   }
 }

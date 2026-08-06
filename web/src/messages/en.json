@@ -14,7 +14,7 @@
     "titleAccent": "Your voice.",
     "subtitle": "Upload a short sample, write a script, and generate natural speech in that voice — running on your own hardware, in seconds.",
     "badgeSpeed": "Real-time on a single GPU",
-    "badgeModels": "3 built-in models",
+    "badgeModels": "2 built-in models",
     "badgePrivacy": "Samples never leave your machine"
   },
   "Workspace": {
@@ -43,20 +43,15 @@
     "generating": "Generating…"
   },
   "Models": {
-    "core": {
-      "name": "Core",
+    "en": {
+      "name": "English",
       "tag": "Fast & stable",
-      "desc": "Low-latency inference tuned for everyday drafts."
-    },
-    "pro": {
-      "name": "Pro",
-      "tag": "Emotion control",
-      "desc": "Higher fidelity with adjustable delivery and tone."
+      "desc": "Low-latency inference tuned for English scripts."
     },
     "multi": {
-      "name": "Multilingual",
-      "tag": "40+ languages",
-      "desc": "Cross-lingual cloning for global scripts."
+      "name": "English & Chinese",
+      "tag": "Bilingual",
+      "desc": "Cross-lingual cloning for English and Chinese scripts."
     }
   }
 }
