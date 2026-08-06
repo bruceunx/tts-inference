@@ -1,6 +1,14 @@
 export const MODEL_IDS = ["en", "multi"] as const;
 export type ModelId = (typeof MODEL_IDS)[number];
 
+export const MODEL_LIMITS: Record<
+  ModelId,
+  { max: number; unit: "words" | "chars" }
+> = {
+  en: { max: 100, unit: "words" },
+  multi: { max: 500, unit: "chars" },
+};
+
 export const MODEL_CONFIGS: Record<
   ModelId,
   { backend: string; model: string; codecModel?: string }

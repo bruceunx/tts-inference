@@ -3,7 +3,8 @@ import { spawn } from "node:child_process";
 import { writeFile, unlink, readFile, mkdtemp } from "node:fs/promises";
 import { tmpdir } from "node:os";
 import path from "node:path";
-import { MODEL_CONFIGS, type ModelId } from "@/lib/tts-config";
+import { MODEL_CONFIGS, type ModelId, MODEL_LIMITS } from "@/lib/tts-config";
+import { countScript } from "@/lib/text-count";
 
 export const runtime = "nodejs";
 
@@ -33,6 +34,11 @@ export async function POST(req: NextRequest) {
   const config = modelId && MODEL_CONFIGS[modelId];
   if (!config) {
     return NextResponse.json({ error: "unknown model" }, { status: 400 });
+  }
+
+  const limit = MODEL_LIMITS[modelId];
+  if (!script.trim() || countScript(script, limit.unit) > limit.max) {
+    return NextResponse.json({ error: "invalid script" }, { status: 400 });
   }
 
   const dir = await mkdtemp(path.join(tmpdir(), "tts-"));
