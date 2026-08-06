@@ -5,29 +5,13 @@ import { useTranslations } from "next-intl";
 import { Mic, Square, UploadCloud, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
-import { Waveform } from "@/components/landing/waveform";
+import { AudioPlayer } from "@/components/landing/audio-player";
+import { decodeAudioBuffer } from "@/lib/waveform";
+import { encodeWav } from "@/lib/wav-encoder";
+import { isAcceptedAudioFile, checkDuration } from "@/lib/validate-audio";
 
 export type VoiceSample = { name: string; blob: Blob };
 type Tab = "upload" | "record";
-
-const MAX_FILE_BYTES = 15 * 1024 * 1024; // 15MB
-const MAX_DURATION_S = 30;
-const MIN_DURATION_S = 1;
-
-async function validateSample(blob: Blob): Promise<string | null> {
-  if (blob.size > MAX_FILE_BYTES) return "File too large (max 15MB)";
-  try {
-    const ctx = new AudioContext();
-    const buffer = await ctx.decodeAudioData(await blob.arrayBuffer());
-    ctx.close();
-    if (buffer.duration > MAX_DURATION_S)
-      return `Sample too long (max ${MAX_DURATION_S}s)`;
-    if (buffer.duration < MIN_DURATION_S) return "Sample too short";
-    return null;
-  } catch {
-    return "Unrecognized audio format";
-  }
-}
 
 export function VoiceSourcePanel({
   sample,
@@ -43,23 +27,31 @@ export function VoiceSourcePanel({
   const t = useTranslations("Workspace");
   const [tab, setTab] = useState<Tab>("upload");
   const [dragOver, setDragOver] = useState(false);
+  const [sampleError, setSampleError] = useState<string | null>(null);
+  const [micError, setMicError] = useState<string | null>(null);
   const inputRef = useRef<HTMLInputElement>(null);
   const recorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
 
-  const [sampleError, setSampleError] = useState<string | null>(null);
-  const [micError, setMicError] = useState<string | null>(null);
-
   async function handleFiles(files: FileList | null) {
     const file = files?.[0];
     if (!file) return;
-    const err = await validateSample(file);
-    if (err) {
-      setSampleError(err);
+    if (!isAcceptedAudioFile(file)) {
+      setSampleError(t("formatError"));
       return;
     }
-    setSampleError(null);
-    onSampleChangeAction({ name: file.name, blob: file });
+    try {
+      const buffer = await decodeAudioBuffer(file);
+      const durationErr = checkDuration(buffer);
+      if (durationErr) {
+        setSampleError(t(durationErr));
+        return;
+      }
+      setSampleError(null);
+      onSampleChangeAction({ name: file.name, blob: file });
+    } catch {
+      setSampleError(t("formatError"));
+    }
   }
 
   async function startRecording() {
@@ -67,37 +59,36 @@ export function VoiceSourcePanel({
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const recorder = new MediaRecorder(stream);
-      console.log("stream", stream);
-      console.log("recorder", recorder);
       chunksRef.current = [];
       recorder.ondataavailable = (e) => chunksRef.current.push(e.data);
       recorder.onstop = async () => {
-        const blob = new Blob(chunksRef.current, { type: recorder.mimeType });
         stream.getTracks().forEach((track) => track.stop());
-        const err = await validateSample(blob);
-        if (err) {
-          setSampleError(err);
-          return;
+        const raw = new Blob(chunksRef.current, { type: recorder.mimeType });
+        try {
+          const buffer = await decodeAudioBuffer(raw);
+          const durationErr = checkDuration(buffer);
+          if (durationErr) {
+            setSampleError(t(durationErr));
+            return;
+          }
+          setSampleError(null);
+          onSampleChangeAction({
+            name: "recording.wav",
+            blob: encodeWav(buffer),
+          });
+        } catch {
+          setSampleError(t("formatError"));
         }
-        setSampleError(null);
-        onSampleChangeAction({ name: "recording.webm", blob });
       };
       recorder.start();
       recorderRef.current = recorder;
       onRecordingChangeAction(true);
     } catch (err) {
-      console.log("recording err", err);
-      if (err instanceof DOMException && err.name === "NotAllowedError") {
-        setMicError(
-          "Microphone access denied — allow it in your browser's site settings",
-        );
-      } else if (err instanceof DOMException && err.name === "NotFoundError") {
-        setMicError("No microphone found");
-      } else if (!navigator.mediaDevices) {
-        setMicError("Microphone requires HTTPS or localhost");
-      } else {
-        setMicError("Could not access microphone");
-      }
+      if (err instanceof DOMException && err.name === "NotAllowedError")
+        setMicError(t("micDenied"));
+      else if (err instanceof DOMException && err.name === "NotFoundError")
+        setMicError(t("micNotFound"));
+      else setMicError(t("micUnknown"));
     }
   }
 
@@ -115,44 +106,42 @@ export function VoiceSourcePanel({
       <h3 className="mt-2 text-lg font-semibold">{t("step1Title")}</h3>
       <p className="text-sm text-muted-foreground">{t("step1Sub")}</p>
 
-      <div className="mt-4 inline-flex w-fit rounded-lg border border-border p-0.5 text-sm">
-        {(["upload", "record"] as const).map((id) => (
-          <button
-            key={id}
-            type="button"
-            onClick={() => setTab(id)}
-            className={cn(
-              "rounded-md px-3 py-1 transition-colors",
-              tab === id
-                ? "bg-primary text-primary-foreground"
-                : "text-muted-foreground hover:text-foreground",
-            )}
-          >
-            {id === "upload" ? t("tabUpload") : t("tabRecord")}
-          </button>
-        ))}
-      </div>
+      {!sample && (
+        <div className="mt-4 inline-flex w-fit rounded-lg border border-border p-0.5 text-sm">
+          {(["upload", "record"] as const).map((id) => (
+            <button
+              key={id}
+              type="button"
+              onClick={() => setTab(id)}
+              className={cn(
+                "rounded-md px-3 py-1 transition-colors",
+                tab === id
+                  ? "bg-primary text-primary-foreground"
+                  : "text-muted-foreground hover:text-foreground",
+              )}
+            >
+              {id === "upload" ? t("tabUpload") : t("tabRecord")}
+            </button>
+          ))}
+        </div>
+      )}
 
       <div className="mt-4 flex flex-1 items-center justify-center">
         {sample ? (
-          <div className="flex w-full items-center justify-between gap-3 rounded-lg border border-border bg-background px-4 py-3">
-            <div className="flex items-center gap-3 overflow-hidden">
-              <Waveform className="h-6 shrink-0" active />
-              <div className="overflow-hidden">
-                <p className="text-xs text-muted-foreground">
-                  {t("recordedLabel")}
-                </p>
-                <p className="truncate text-sm font-medium">{sample.name}</p>
-              </div>
+          <div className="w-full space-y-2">
+            <AudioPlayer blob={sample.blob} showSpeed={false} />
+            <div className="flex items-center justify-between px-1">
+              <span className="truncate text-xs text-muted-foreground">
+                {sample.name}
+              </span>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => onSampleChangeAction(null)}
+              >
+                <X className="size-3.5" /> {t("removeSample")}
+              </Button>
             </div>
-            <Button
-              variant="ghost"
-              size="icon-sm"
-              onClick={() => onSampleChangeAction(null)}
-              aria-label={t("removeSample")}
-            >
-              <X />
-            </Button>
           </div>
         ) : tab === "upload" ? (
           <button
@@ -181,7 +170,7 @@ export function VoiceSourcePanel({
             <input
               ref={inputRef}
               type="file"
-              accept="audio/*"
+              accept=".mp3,.wav,audio/mpeg,audio/wav"
               className="hidden"
               onChange={(e) => handleFiles(e.target.files)}
             />
@@ -197,30 +186,25 @@ export function VoiceSourcePanel({
                 : "border-border hover:border-foreground/30",
             )}
           >
-            {recording ? (
-              <Waveform
-                className="h-8"
-                active
-                barClassName="bg-destructive/70"
-              />
-            ) : (
-              <Mic className="size-6 text-muted-foreground" />
-            )}
+            <Mic
+              className={cn(
+                "size-6",
+                recording ? "text-destructive" : "text-muted-foreground",
+              )}
+            />
             <p className="flex items-center gap-2 text-sm font-medium">
               {recording && (
                 <Square className="size-3 fill-destructive text-destructive" />
               )}
               {recording ? t("recordActive") : t("recordIdle")}
             </p>
-            {micError && (
-              <p className="mt-1 text-xs text-destructive">{micError}</p>
-            )}
           </button>
         )}
-        {sampleError && (
-          <p className="mt-2 text-xs text-destructive">{sampleError}</p>
-        )}
       </div>
+      {sampleError && (
+        <p className="mt-2 text-xs text-destructive">{sampleError}</p>
+      )}
+      {micError && <p className="mt-2 text-xs text-destructive">{micError}</p>}
     </div>
   );
 }
