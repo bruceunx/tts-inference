@@ -1,10 +1,10 @@
 "use client";
 
+import type { ModelId } from "@/lib/tts-config";
+
 import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
-
-export const MODEL_IDS = ["core", "pro", "multi"] as const;
-export type ModelId = (typeof MODEL_IDS)[number];
+import { MODEL_IDS } from "@/lib/tts-config";
 
 export function ModelSelect({
   value,

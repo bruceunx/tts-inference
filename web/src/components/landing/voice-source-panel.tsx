@@ -1,22 +1,23 @@
 "use client";
 
-import { ChangeEvent, useRef, useState } from "react";
+import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Mic, Square, UploadCloud, X } from "lucide-react";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { Waveform } from "@/components/landing/waveform";
 
+export type VoiceSample = { name: string; blob: Blob };
 type Tab = "upload" | "record";
 
 export function VoiceSourcePanel({
-  sampleName,
+  sample,
   onSampleChangeAction,
   recording,
   onRecordingChangeAction,
 }: {
-  sampleName: string | null;
-  onSampleChangeAction: (name: string | null) => void;
+  sample: VoiceSample | null;
+  onSampleChangeAction: (sample: VoiceSample | null) => void;
   recording: boolean;
   onRecordingChangeAction: (recording: boolean) => void;
 }) {
@@ -24,10 +25,38 @@ export function VoiceSourcePanel({
   const [tab, setTab] = useState<Tab>("upload");
   const [dragOver, setDragOver] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
+  const recorderRef = useRef<MediaRecorder | null>(null);
+  const chunksRef = useRef<Blob[]>([]);
 
   function handleFiles(files: FileList | null) {
     const file = files?.[0];
-    if (file) onSampleChangeAction(file.name);
+    if (file) onSampleChangeAction({ name: file.name, blob: file });
+  }
+
+  async function startRecording() {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      const recorder = new MediaRecorder(stream);
+      chunksRef.current = [];
+      recorder.ondataavailable = (e) => chunksRef.current.push(e.data);
+      recorder.onstop = () => {
+        onSampleChangeAction({
+          name: "recording.webm",
+          blob: new Blob(chunksRef.current, { type: recorder.mimeType }),
+        });
+        stream.getTracks().forEach((track) => track.stop());
+      };
+      recorder.start();
+      recorderRef.current = recorder;
+      onRecordingChangeAction(true);
+    } catch (err) {
+      console.error("mic access failed", err);
+    }
+  }
+
+  function stopRecording() {
+    recorderRef.current?.stop();
+    onRecordingChangeAction(false);
   }
 
   return (
@@ -58,7 +87,7 @@ export function VoiceSourcePanel({
       </div>
 
       <div className="mt-4 flex flex-1 items-center justify-center">
-        {sampleName ? (
+        {sample ? (
           <div className="flex w-full items-center justify-between gap-3 rounded-lg border border-border bg-background px-4 py-3">
             <div className="flex items-center gap-3 overflow-hidden">
               <Waveform className="h-6 shrink-0" active />
@@ -66,7 +95,7 @@ export function VoiceSourcePanel({
                 <p className="text-xs text-muted-foreground">
                   {t("recordedLabel")}
                 </p>
-                <p className="truncate text-sm font-medium">{sampleName}</p>
+                <p className="truncate text-sm font-medium">{sample.name}</p>
               </div>
             </div>
             <Button
@@ -107,22 +136,13 @@ export function VoiceSourcePanel({
               type="file"
               accept="audio/*"
               className="hidden"
-              onChange={(e: ChangeEvent<HTMLInputElement>) =>
-                handleFiles(e.target.files)
-              }
+              onChange={(e) => handleFiles(e.target.files)}
             />
           </button>
         ) : (
           <button
             type="button"
-            onClick={() => {
-              if (recording) {
-                onRecordingChangeAction(false);
-                onSampleChangeAction("recording.wav");
-              } else {
-                onRecordingChangeAction(true);
-              }
-            }}
+            onClick={() => (recording ? stopRecording() : startRecording())}
             className={cn(
               "flex w-full flex-col items-center gap-3 rounded-lg border-2 border-dashed px-4 py-10 text-center transition-colors",
               recording

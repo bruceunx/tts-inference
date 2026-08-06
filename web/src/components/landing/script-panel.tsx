@@ -1,9 +1,11 @@
 "use client";
 
+import type { ModelId } from "@/lib/tts-config";
+
 import { useTranslations } from "next-intl";
 import { Wand2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { ModelSelect, type ModelId } from "@/components/landing/model-select";
+import { ModelSelect } from "@/components/landing/model-select";
 
 const MAX_CHARS = 1000;
 
