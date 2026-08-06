@@ -34,7 +34,7 @@ export function Waveform({
   return (
     <div
       className={cn(
-        "flex items-center gap-0.75",
+        "flex w-full items-center gap-0.75",
         onSeekAction && "cursor-pointer",
         className,
       )}
@@ -49,12 +49,15 @@ export function Waveform({
           <span
             key={`bar-${i}-${h}`}
             className={cn(
-              "w-0.75 rounded-full transition-colors motion-reduce:animate-none",
+              "min-w-0.75 flex-1 rounded-full bg-primary/30 transition-colors",
               played ? "bg-primary" : "bg-primary/30",
               active && "animate-[waveform_1s_ease-in-out_infinite]",
               barClassName,
             )}
-            style={{ height: `${h}%`, animationDelay: `${i * 70}ms` }}
+            style={{
+              height: `${h}%`,
+              animationDelay: active ? `${i * 60}ms` : undefined,
+            }}
           />
         );
       })}
