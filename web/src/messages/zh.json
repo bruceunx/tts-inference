@@ -32,6 +32,7 @@
     "resultsTitle": "生成的语音",
     "resultsEmptyTitle": "尚未生成任何内容",
     "resultsEmptySub": "添加语音样本和文本后点击生成,结果会显示在这里。",
+    "generateError": "生成失败",
     "step2": "02",
     "step2Title": "编写文本",
     "step2Sub": "选择模型,然后生成。",

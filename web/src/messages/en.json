@@ -32,6 +32,7 @@
     "resultsTitle": "Generated speech",
     "resultsEmptyTitle": "Nothing generated yet",
     "resultsEmptySub": "Add a voice sample and script, then generate to hear the result here.",
+    "generateError": "Generation failed",
     "step2": "02",
     "step2Title": "Write the script",
     "step2Sub": "Choose a model, then generate.",
