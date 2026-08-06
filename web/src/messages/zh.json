@@ -1,4 +1,61 @@
 {
-  "Metadata": { "title": "Next 模板", "description": "" },
-  "Home": { "title": "你好,世界" }
+  "Metadata": {
+    "title": "Timbre — 本地语音克隆引擎",
+    "description": "Timbre 是一款快速的自托管语音克隆与文本转语音引擎。上传一段样本,写下文本,即可用该声音生成语音。"
+  },
+  "Nav": {
+    "workspace": "工作台",
+    "models": "模型",
+    "docs": "文档"
+  },
+  "Hero": {
+    "eyebrow": "自托管语音克隆",
+    "title": "让文字开口说话。",
+    "titleAccent": "用你的声音。",
+    "subtitle": "上传一段简短样本,写下文本,即可在你自己的硬件上,几秒内生成该声音的自然语音。",
+    "badgeSpeed": "单卡 GPU 实时推理",
+    "badgeModels": "内置 3 种模型",
+    "badgePrivacy": "样本不会离开本机"
+  },
+  "Workspace": {
+    "step1": "01",
+    "step1Title": "添加语音样本",
+    "step1Sub": "3–15 秒清晰、单人声音频效果最佳。",
+    "tabUpload": "上传",
+    "tabRecord": "录制",
+    "dropTitle": "将音频文件拖到此处",
+    "dropSub": "或点击浏览 — 支持 MP3、WAV、OGG",
+    "recordIdle": "点击开始录音",
+    "recordActive": "录音中 — 点击停止",
+    "recordedLabel": "样本已就绪",
+    "removeSample": "移除",
+    "resultsTitle": "生成的语音",
+    "resultsEmptyTitle": "尚未生成任何内容",
+    "resultsEmptySub": "添加语音样本和文本后点击生成,结果会显示在这里。",
+    "step2": "02",
+    "step2Title": "编写文本",
+    "step2Sub": "选择模型,然后生成。",
+    "scriptPlaceholder": "输入或粘贴要合成的文本…",
+    "charCount": "{count} / {max}",
+    "modelTitle": "模型",
+    "generate": "生成语音",
+    "generating": "生成中…"
+  },
+  "Models": {
+    "core": {
+      "name": "Core",
+      "tag": "快速稳定",
+      "desc": "针对日常草稿优化的低延迟推理。"
+    },
+    "pro": {
+      "name": "Pro",
+      "tag": "情感控制",
+      "desc": "更高保真度,可调节语气与表现力。"
+    },
+    "multi": {
+      "name": "Multilingual",
+      "tag": "40+ 种语言",
+      "desc": "面向全球文本的跨语言克隆。"
+    }
+  }
 }

@@ -1,4 +1,61 @@
 {
-  "Metadata": { "title": "Next Template", "description": "" },
-  "Home": { "title": "Hello World" }
+  "Metadata": {
+    "title": "Timbre — Clone Any Voice Locally",
+    "description": "Timbre is a fast, self-hosted voice cloning and text-to-speech engine. Upload a sample, write your script, and generate speech in your voice."
+  },
+  "Nav": {
+    "workspace": "Workspace",
+    "models": "Models",
+    "docs": "Docs"
+  },
+  "Hero": {
+    "eyebrow": "Self-hosted voice cloning",
+    "title": "Give your text a voice.",
+    "titleAccent": "Your voice.",
+    "subtitle": "Upload a short sample, write a script, and generate natural speech in that voice — running on your own hardware, in seconds.",
+    "badgeSpeed": "Real-time on a single GPU",
+    "badgeModels": "3 built-in models",
+    "badgePrivacy": "Samples never leave your machine"
+  },
+  "Workspace": {
+    "step1": "01",
+    "step1Title": "Add a voice sample",
+    "step1Sub": "3–15 seconds of clean, single-speaker audio works best.",
+    "tabUpload": "Upload",
+    "tabRecord": "Record",
+    "dropTitle": "Drop an audio file here",
+    "dropSub": "or click to browse — MP3, WAV, or OGG",
+    "recordIdle": "Click to start recording",
+    "recordActive": "Recording — click to stop",
+    "recordedLabel": "Sample ready",
+    "removeSample": "Remove",
+    "resultsTitle": "Generated speech",
+    "resultsEmptyTitle": "Nothing generated yet",
+    "resultsEmptySub": "Add a voice sample and script, then generate to hear the result here.",
+    "step2": "02",
+    "step2Title": "Write the script",
+    "step2Sub": "Choose a model, then generate.",
+    "scriptPlaceholder": "Type or paste the text you want spoken...",
+    "charCount": "{count} / {max}",
+    "modelTitle": "Model",
+    "generate": "Generate speech",
+    "generating": "Generating…"
+  },
+  "Models": {
+    "core": {
+      "name": "Core",
+      "tag": "Fast & stable",
+      "desc": "Low-latency inference tuned for everyday drafts."
+    },
+    "pro": {
+      "name": "Pro",
+      "tag": "Emotion control",
+      "desc": "Higher fidelity with adjustable delivery and tone."
+    },
+    "multi": {
+      "name": "Multilingual",
+      "tag": "40+ languages",
+      "desc": "Cross-lingual cloning for global scripts."
+    }
+  }
 }
