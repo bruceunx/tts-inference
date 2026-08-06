@@ -1,12 +1,13 @@
 "use client";
 
-import type { ModelId } from "@/lib/tts-config";
-import type { VoiceSample } from "@/components/landing/voice-source-panel";
-
 import { useState } from "react";
-import { VoiceSourcePanel } from "@/components/landing/voice-source-panel";
+import {
+  VoiceSourcePanel,
+  type VoiceSample,
+} from "@/components/landing/voice-source-panel";
 import { ResultsPanel } from "@/components/landing/results-panel";
 import { ScriptPanel } from "@/components/landing/script-panel";
+import type { ModelId } from "@/lib/tts-config";
 
 export function Workspace() {
   const [sample, setSample] = useState<VoiceSample | null>(null);
@@ -14,15 +15,32 @@ export function Workspace() {
   const [script, setScript] = useState("");
   const [model, setModel] = useState<ModelId>("core");
   const [generating, setGenerating] = useState(false);
-  const [hasResult, setHasResult] = useState(false);
+  const [result, setResult] = useState<Blob | null>(null);
+  const [error, setError] = useState<string | null>(null);
 
-  function handleGenerate() {
+  async function handleGenerate() {
+    if (!sample) return;
     setGenerating(true);
-    setHasResult(false);
-    setTimeout(() => {
+    setResult(null);
+    setError(null);
+
+    const form = new FormData();
+    form.append("voice", sample.blob, sample.name);
+    form.append("script", script);
+    form.append("model", model);
+
+    try {
+      const res = await fetch("/api/generate", { method: "POST", body: form });
+      if (!res.ok) {
+        const body = await res.json().catch(() => ({}));
+        throw new Error(body.error ?? `request failed (${res.status})`);
+      }
+      setResult(await res.blob());
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "unknown error");
+    } finally {
       setGenerating(false);
-      setHasResult(true);
-    }, 1800);
+    }
   }
 
   return (
@@ -34,7 +52,7 @@ export function Workspace() {
           recording={recording}
           onRecordingChangeAction={setRecording}
         />
-        <ResultsPanel generating={generating} hasResult={hasResult} />
+        <ResultsPanel generating={generating} result={result} error={error} />
       </div>
       <div className="mt-4">
         <ScriptPanel
