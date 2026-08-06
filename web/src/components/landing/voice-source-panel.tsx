@@ -9,6 +9,7 @@ import { AudioPlayer } from "@/components/landing/audio-player";
 import { decodeAudioBuffer } from "@/lib/waveform";
 import { encodeWav } from "@/lib/wav-encoder";
 import { isAcceptedAudioFile, checkDuration } from "@/lib/validate-audio";
+import { resampleAudioBuffer } from "@/lib/resample";
 
 export type VoiceSample = { name: string; blob: Blob };
 type Tab = "upload" | "record";
@@ -48,7 +49,11 @@ export function VoiceSourcePanel({
         return;
       }
       setSampleError(null);
-      onSampleChangeAction({ name: file.name, blob: file });
+      const resampled = await resampleAudioBuffer(buffer);
+      onSampleChangeAction({
+        name: file.name.replace(/\.\w+$/, ".wav"),
+        blob: encodeWav(resampled),
+      });
     } catch {
       setSampleError(t("formatError"));
     }
@@ -72,9 +77,10 @@ export function VoiceSourcePanel({
             return;
           }
           setSampleError(null);
+          const resampled = await resampleAudioBuffer(buffer);
           onSampleChangeAction({
             name: "recording.wav",
-            blob: encodeWav(buffer),
+            blob: encodeWav(resampled),
           });
         } catch {
           setSampleError(t("formatError"));

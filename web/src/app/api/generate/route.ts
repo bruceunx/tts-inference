@@ -8,7 +8,7 @@ import { countScript } from "@/lib/text-count";
 
 export const runtime = "nodejs";
 
-const GENERATE_TIMEOUT_MS = 60_000;
+const GENERATE_TIMEOUT_MS = 600_000;
 
 const BIN =
   process.env.CRISPASR_BIN ?? path.resolve(process.cwd(), "../bin/crispasr");
@@ -45,6 +45,7 @@ export async function POST(req: NextRequest) {
   const voicePath = path.join(dir, voice.name || "voice.wav");
   const outputPath = path.join(dir, "output.wav");
   await writeFile(voicePath, Buffer.from(await voice.arrayBuffer()));
+  console.log("voice path", voicePath, outputPath);
 
   const args = [
     "-m",
