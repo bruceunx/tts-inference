@@ -9,21 +9,20 @@ const MAX_CHARS = 1000;
 
 export function ScriptPanel({
   script,
-  onScriptChange,
+  onScriptChangeAction,
   model,
-  onModelChange,
+  onModelChangeAction,
   disabled,
   generating,
-  onGenerate,
+  onGenerateAction,
 }: {
   script: string;
-    // @ts-ignore
-  onScriptChange: (value: string) => void;
+  onScriptChangeAction: (value: string) => void;
   model: ModelId;
-  onModelChange: (id: ModelId) => void;
+  onModelChangeAction: (id: ModelId) => void;
   disabled: boolean;
   generating: boolean;
-  onGenerate: () => void;
+  onGenerateAction: () => void;
 }) {
   const t = useTranslations("Workspace");
 
@@ -39,7 +38,9 @@ export function ScriptPanel({
       <div className="mt-4">
         <textarea
           value={script}
-          onChange={(e) => onScriptChange(e.target.value.slice(0, MAX_CHARS))}
+          onChange={(e) =>
+            onScriptChangeAction(e.target.value.slice(0, MAX_CHARS))
+          }
           placeholder={t("scriptPlaceholder")}
           rows={4}
           className="w-full resize-none rounded-lg border border-border bg-background p-3 text-sm outline-none focus-visible:border-ring focus-visible:ring-3 focus-visible:ring-ring/50"
@@ -51,14 +52,14 @@ export function ScriptPanel({
 
       <div className="mt-2">
         <p className="mb-2 text-sm font-medium">{t("modelTitle")}</p>
-        <ModelSelect value={model} action={onModelChange} />
+        <ModelSelect value={model} onChangeAction={onModelChangeAction} />
       </div>
 
       <Button
         size="lg"
         className="mt-5 w-full gap-2"
         disabled={disabled || generating}
-        onClick={onGenerate}
+        onClick={onGenerateAction}
       >
         <Wand2 />
         {generating ? t("generating") : t("generate")}

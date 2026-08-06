@@ -28,9 +28,9 @@ export function Workspace() {
       <div className="grid gap-4 sm:grid-cols-2">
         <VoiceSourcePanel
           sampleName={sampleName}
-          onSampleChange={setSampleName}
+          onSampleChangeAction={setSampleName}
           recording={recording}
-          onRecordingChange={setRecording}
+          onRecordingChangeAction={setRecording}
         />
         <ResultsPanel generating={generating} hasResult={hasResult} />
       </div>
@@ -38,12 +38,12 @@ export function Workspace() {
       <div className="mt-4">
         <ScriptPanel
           script={script}
-          onScriptChange={setScript}
+          onScriptChangeAction={setScript}
           model={model}
-          onModelChange={setModel}
+          onModelChangeAction={setModel}
           disabled={!sampleName || script.trim().length === 0}
           generating={generating}
-          onGenerate={handleGenerate}
+          onGenerateAction={handleGenerate}
         />
       </div>
     </section>

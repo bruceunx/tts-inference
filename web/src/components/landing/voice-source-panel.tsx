@@ -1,6 +1,6 @@
 "use client";
 
-import { useRef, useState } from "react";
+import { ChangeEvent, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Mic, Square, UploadCloud, X } from "lucide-react";
 import { cn } from "@/lib/utils";
@@ -11,14 +11,14 @@ type Tab = "upload" | "record";
 
 export function VoiceSourcePanel({
   sampleName,
-  onSampleChange,
+  onSampleChangeAction,
   recording,
-  onRecordingChange,
+  onRecordingChangeAction,
 }: {
   sampleName: string | null;
-  onSampleChange: (name: string | null) => void;
+  onSampleChangeAction: (name: string | null) => void;
   recording: boolean;
-  onRecordingChange: (recording: boolean) => void;
+  onRecordingChangeAction: (recording: boolean) => void;
 }) {
   const t = useTranslations("Workspace");
   const [tab, setTab] = useState<Tab>("upload");
@@ -27,7 +27,7 @@ export function VoiceSourcePanel({
 
   function handleFiles(files: FileList | null) {
     const file = files?.[0];
-    if (file) onSampleChange(file.name);
+    if (file) onSampleChangeAction(file.name);
   }
 
   return (
@@ -72,7 +72,7 @@ export function VoiceSourcePanel({
             <Button
               variant="ghost"
               size="icon-sm"
-              onClick={() => onSampleChange(null)}
+              onClick={() => onSampleChangeAction(null)}
               aria-label={t("removeSample")}
             >
               <X />
@@ -107,7 +107,9 @@ export function VoiceSourcePanel({
               type="file"
               accept="audio/*"
               className="hidden"
-              onChange={(e) => handleFiles(e.target.files)}
+              onChange={(e: ChangeEvent<HTMLInputElement>) =>
+                handleFiles(e.target.files)
+              }
             />
           </button>
         ) : (
@@ -115,10 +117,10 @@ export function VoiceSourcePanel({
             type="button"
             onClick={() => {
               if (recording) {
-                onRecordingChange(false);
-                onSampleChange("recording.wav");
+                onRecordingChangeAction(false);
+                onSampleChangeAction("recording.wav");
               } else {
-                onRecordingChange(true);
+                onRecordingChangeAction(true);
               }
             }}
             className={cn(

@@ -33,8 +33,7 @@ export function Hero() {
         </p>
 
         <h1 className="text-4xl font-semibold tracking-tight text-balance sm:text-6xl">
-          {t("title")}{" "}
-          <span className="text-primary">{t("titleAccent")}</span>
+          {t("title")} <span className="text-primary">{t("titleAccent")}</span>
         </h1>
 
         <p className="mx-auto mt-5 max-w-lg text-base text-muted-foreground text-balance sm:text-lg">

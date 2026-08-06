@@ -8,10 +8,10 @@ export type ModelId = (typeof MODEL_IDS)[number];
 
 export function ModelSelect({
   value,
-  action,
+  onChangeAction,
 }: {
   value: ModelId;
-  action: (id: ModelId) => void;
+  onChangeAction: (id: ModelId) => void;
 }) {
   const t = useTranslations("Models");
 
@@ -34,7 +34,7 @@ export function ModelSelect({
               name="model"
               value={id}
               checked={selected}
-              onChange={() => action(id)}
+              onChange={() => onChangeAction(id)}
               className="sr-only"
             />
             <div className="flex items-center justify-between">
