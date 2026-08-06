@@ -56,7 +56,7 @@ export function Workspace() {
   }
 
   return (
-    <section id="workspace" className="mx-auto max-w-5xl px-4 pb-24">
+    <section id="workspace" className="mx-auto max-w-5xl w-full px-4 pb-24">
       <div className="grid gap-4 sm:grid-cols-2">
         <VoiceSourcePanel
           sample={sample}

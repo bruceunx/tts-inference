@@ -27,7 +27,7 @@ export function Hero() {
         barClassName="animate-[waveform_2.4s_ease-in-out_infinite]"
       />
 
-      <div className="relative mx-auto max-w-2xl">
+      <div className="relative mx-auto max-w-4xl">
         <p className="mb-4 font-mono text-xs tracking-wide text-primary uppercase">
           {t("eyebrow")}
         </p>
