@@ -48,6 +48,7 @@ export function VoiceSourcePanel({
   const chunksRef = useRef<Blob[]>([]);
 
   const [sampleError, setSampleError] = useState<string | null>(null);
+  const [micError, setMicError] = useState<string | null>(null);
 
   async function handleFiles(files: FileList | null) {
     const file = files?.[0];
@@ -62,12 +63,14 @@ export function VoiceSourcePanel({
   }
 
   async function startRecording() {
+    setMicError(null);
     try {
       const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
       const recorder = new MediaRecorder(stream);
+      console.log("stream", stream);
+      console.log("recorder", recorder);
       chunksRef.current = [];
       recorder.ondataavailable = (e) => chunksRef.current.push(e.data);
-
       recorder.onstop = async () => {
         const blob = new Blob(chunksRef.current, { type: recorder.mimeType });
         stream.getTracks().forEach((track) => track.stop());
@@ -79,12 +82,22 @@ export function VoiceSourcePanel({
         setSampleError(null);
         onSampleChangeAction({ name: "recording.webm", blob });
       };
-
       recorder.start();
       recorderRef.current = recorder;
       onRecordingChangeAction(true);
     } catch (err) {
-      console.error("mic access failed", err);
+      console.log("recording err", err);
+      if (err instanceof DOMException && err.name === "NotAllowedError") {
+        setMicError(
+          "Microphone access denied — allow it in your browser's site settings",
+        );
+      } else if (err instanceof DOMException && err.name === "NotFoundError") {
+        setMicError("No microphone found");
+      } else if (!navigator.mediaDevices) {
+        setMicError("Microphone requires HTTPS or localhost");
+      } else {
+        setMicError("Could not access microphone");
+      }
     }
   }
 
@@ -199,6 +212,9 @@ export function VoiceSourcePanel({
               )}
               {recording ? t("recordActive") : t("recordIdle")}
             </p>
+            {micError && (
+              <p className="mt-1 text-xs text-destructive">{micError}</p>
+            )}
           </button>
         )}
         {sampleError && (
