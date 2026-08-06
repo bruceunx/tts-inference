@@ -10,6 +10,25 @@ import { Waveform } from "@/components/landing/waveform";
 export type VoiceSample = { name: string; blob: Blob };
 type Tab = "upload" | "record";
 
+const MAX_FILE_BYTES = 15 * 1024 * 1024; // 15MB
+const MAX_DURATION_S = 30;
+const MIN_DURATION_S = 1;
+
+async function validateSample(blob: Blob): Promise<string | null> {
+  if (blob.size > MAX_FILE_BYTES) return "File too large (max 15MB)";
+  try {
+    const ctx = new AudioContext();
+    const buffer = await ctx.decodeAudioData(await blob.arrayBuffer());
+    ctx.close();
+    if (buffer.duration > MAX_DURATION_S)
+      return `Sample too long (max ${MAX_DURATION_S}s)`;
+    if (buffer.duration < MIN_DURATION_S) return "Sample too short";
+    return null;
+  } catch {
+    return "Unrecognized audio format";
+  }
+}
+
 export function VoiceSourcePanel({
   sample,
   onSampleChangeAction,
@@ -28,9 +47,18 @@ export function VoiceSourcePanel({
   const recorderRef = useRef<MediaRecorder | null>(null);
   const chunksRef = useRef<Blob[]>([]);
 
-  function handleFiles(files: FileList | null) {
+  const [sampleError, setSampleError] = useState<string | null>(null);
+
+  async function handleFiles(files: FileList | null) {
     const file = files?.[0];
-    if (file) onSampleChangeAction({ name: file.name, blob: file });
+    if (!file) return;
+    const err = await validateSample(file);
+    if (err) {
+      setSampleError(err);
+      return;
+    }
+    setSampleError(null);
+    onSampleChangeAction({ name: file.name, blob: file });
   }
 
   async function startRecording() {
@@ -39,13 +67,19 @@ export function VoiceSourcePanel({
       const recorder = new MediaRecorder(stream);
       chunksRef.current = [];
       recorder.ondataavailable = (e) => chunksRef.current.push(e.data);
-      recorder.onstop = () => {
-        onSampleChangeAction({
-          name: "recording.webm",
-          blob: new Blob(chunksRef.current, { type: recorder.mimeType }),
-        });
+
+      recorder.onstop = async () => {
+        const blob = new Blob(chunksRef.current, { type: recorder.mimeType });
         stream.getTracks().forEach((track) => track.stop());
+        const err = await validateSample(blob);
+        if (err) {
+          setSampleError(err);
+          return;
+        }
+        setSampleError(null);
+        onSampleChangeAction({ name: "recording.webm", blob });
       };
+
       recorder.start();
       recorderRef.current = recorder;
       onRecordingChangeAction(true);
@@ -166,6 +200,9 @@ export function VoiceSourcePanel({
               {recording ? t("recordActive") : t("recordIdle")}
             </p>
           </button>
+        )}
+        {sampleError && (
+          <p className="mt-2 text-xs text-destructive">{sampleError}</p>
         )}
       </div>
     </div>

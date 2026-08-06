@@ -29,16 +29,28 @@ export function Workspace() {
     form.append("script", script);
     form.append("model", model);
 
+    const controller = new AbortController();
+    const timer = setTimeout(() => controller.abort(), 65_000);
+
     try {
-      const res = await fetch("/api/generate", { method: "POST", body: form });
+      const res = await fetch("/api/generate", {
+        method: "POST",
+        body: form,
+        signal: controller.signal,
+      });
       if (!res.ok) {
         const body = await res.json().catch(() => ({}));
         throw new Error(body.error ?? `request failed (${res.status})`);
       }
       setResult(await res.blob());
     } catch (err) {
-      setError(err instanceof Error ? err.message : "unknown error");
+      if (err instanceof DOMException && err.name === "AbortError") {
+        setError("Generation timed out");
+      } else {
+        setError(err instanceof Error ? err.message : "unknown error");
+      }
     } finally {
+      clearTimeout(timer);
       setGenerating(false);
     }
   }

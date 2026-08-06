@@ -76,14 +76,28 @@ export async function POST(req: NextRequest) {
   }
 }
 
-function run(bin: string, args: string[]) {
+export const GENERATE_TIMEOUT_MS = 60_000;
+
+function run(bin: string, args: string[], timeoutMs: number) {
   return new Promise<void>((resolve, reject) => {
     const proc = spawn(bin, args);
     let stderr = "";
+    let timedOut = false;
+
+    const timer = setTimeout(() => {
+      timedOut = true;
+      proc.kill("SIGKILL");
+    }, timeoutMs);
+
     proc.stderr.on("data", (d) => (stderr += d));
-    proc.on("error", reject);
-    proc.on("close", (code) =>
-      code === 0 ? resolve() : reject(new Error(stderr || `exit ${code}`)),
-    );
+    proc.on("error", (err) => {
+      clearTimeout(timer);
+      reject(err);
+    });
+    proc.on("close", (code) => {
+      clearTimeout(timer);
+      if (timedOut) return reject(new Error("generation timed out"));
+      code === 0 ? resolve() : reject(new Error(stderr || `exit ${code}`));
+    });
   });
 }
