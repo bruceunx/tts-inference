@@ -13,7 +13,7 @@ import { encodeWav } from "@/lib/wav-encoder";
 import { isAcceptedAudioFile, checkDuration } from "@/lib/validate-audio";
 import { resampleAudioBuffer } from "@/lib/resample";
 
-export type VoiceSample = { name: string; blob: Blob };
+export type VoiceSample = { id?: string; name: string; blob: Blob };
 type Tab = "upload" | "record";
 
 export function VoiceSourcePanel({
@@ -223,7 +223,11 @@ export function VoiceSourcePanel({
           entries={history.entries}
           onRemoveAction={history.remove}
           onSelectAction={(entry) =>
-            onSampleChangeAction({ name: entry.name, blob: entry.blob })
+            onSampleChangeAction({
+              id: entry.id,
+              name: entry.name,
+              blob: entry.blob,
+            })
           }
           emptyLabel={t("noRecentSamples")}
         />

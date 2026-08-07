@@ -24,7 +24,7 @@ export function Workspace() {
 
   function handleSampleChange(next: VoiceSample | null) {
     setSample(next);
-    if (next) referenceHistory.add(next.name, next.blob);
+    if (next && !next.id) referenceHistory.add(next.name, next.blob);
   }
 
   async function handleGenerate() {
