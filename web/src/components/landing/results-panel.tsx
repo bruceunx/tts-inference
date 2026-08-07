@@ -70,6 +70,7 @@ export function ResultsPanel({
         <AudioHistory
           entries={history.entries}
           onRemoveAction={history.remove}
+          showDownload
           emptyLabel={t("noRecentGenerations")}
         />
       </div>

@@ -1,7 +1,7 @@
 "use client";
 
 import { Trash2, Check } from "lucide-react";
-import { useTranslations } from "next-intl";
+import { useFormatter, useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { AudioPlayer } from "@/components/landing/audio-player";
@@ -12,29 +12,53 @@ export function AudioHistory({
   onRemoveAction,
   onSelectAction,
   activeId,
+  showDownload = false,
   emptyLabel,
 }: {
   entries: AudioEntry[];
   onRemoveAction: (id: string) => void;
   onSelectAction?: (entry: AudioEntry) => void;
   activeId?: string;
+  showDownload?: boolean;
   emptyLabel: string;
 }) {
   const t = useTranslations("Workspace");
+  const format = useFormatter();
 
-  if (entries.length === 0) return <p className="text-xs text-muted-foreground">{emptyLabel}</p>;
+  if (entries.length === 0)
+    return <p className="text-xs text-muted-foreground">{emptyLabel}</p>;
 
   return (
     <div className="space-y-2">
-      {entries.map((entry) => {
+      {entries.map((entry, index) => {
         const active = entry.id === activeId;
         return (
           <div
             key={entry.id}
-            className={cn("rounded-lg border p-2", active ? "border-primary bg-primary/5" : "border-border bg-background")}
+            className={cn(
+              "rounded-lg border p-2",
+              active
+                ? "border-primary bg-primary/5"
+                : "border-border bg-background",
+            )}
           >
             <div className="flex items-center justify-between gap-2">
-              <span className="truncate text-xs font-medium text-muted-foreground">{entry.name}</span>
+              <div className="flex min-w-0 items-center gap-2">
+                <span className="shrink-0 font-mono text-xs text-muted-foreground">
+                  #{index + 1}
+                </span>
+                <div className="min-w-0">
+                  <p className="truncate text-xs font-medium text-muted-foreground">
+                    {entry.name}
+                  </p>
+                  <p className="text-[11px] text-muted-foreground/70">
+                    {format.dateTime(new Date(entry.createdAt), {
+                      dateStyle: "short",
+                      timeStyle: "short",
+                    })}
+                  </p>
+                </div>
+              </div>
               <div className="flex shrink-0 items-center gap-1">
                 {onSelectAction &&
                   (active ? (
@@ -42,16 +66,29 @@ export function AudioHistory({
                       <Check className="size-3" /> {t("inUse")}
                     </span>
                   ) : (
-                    <Button variant="ghost" size="sm" onClick={() => onSelectAction(entry)}>
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => onSelectAction(entry)}
+                    >
                       {t("useSample")}
                     </Button>
                   ))}
-                <Button variant="ghost" size="icon-sm" aria-label={t("removeSample")} onClick={() => onRemoveAction(entry.id)}>
+                <Button
+                  variant="ghost"
+                  size="icon-sm"
+                  aria-label={t("removeSample")}
+                  onClick={() => onRemoveAction(entry.id)}
+                >
                   <Trash2 className="size-3.5" />
                 </Button>
               </div>
             </div>
-            <AudioPlayer blob={entry.blob} showSpeed={false} />
+            <AudioPlayer
+              blob={entry.blob}
+              showSpeed={false}
+              downloadName={showDownload ? entry.name : undefined}
+            />
           </div>
         );
       })}
