@@ -12,6 +12,7 @@ import { decodeAudioBuffer } from "@/lib/waveform";
 import { encodeWav } from "@/lib/wav-encoder";
 import { isAcceptedAudioFile, checkDuration } from "@/lib/validate-audio";
 import { resampleAudioBuffer } from "@/lib/resample";
+import { HistorySection } from "./history-section";
 
 export type VoiceSample = { id?: string; name: string; blob: Blob };
 type Tab = "upload" | "record";
@@ -136,7 +137,7 @@ export function VoiceSourcePanel({
         </div>
       )}
 
-      <div className="mt-4 flex flex-1 items-center justify-center">
+      <div className="mt-4 flex flex-1 items-start justify-center">
         {sample ? (
           <div className="w-full space-y-2">
             <AudioPlayer blob={sample.blob} showSpeed={false} />
@@ -215,10 +216,7 @@ export function VoiceSourcePanel({
         <p className="mt-2 text-xs text-destructive">{sampleError}</p>
       )}
       {micError && <p className="mt-2 text-xs text-destructive">{micError}</p>}
-      <div className="mt-4 border-t border-border pt-4">
-        <p className="mb-2 text-xs font-medium text-muted-foreground">
-          {t("recentSamples")}
-        </p>
+      <HistorySection title={t("recentSamples")} count={history.entries.length}>
         <AudioHistory
           entries={history.entries}
           activeId={sample?.id}
@@ -232,7 +230,7 @@ export function VoiceSourcePanel({
           }
           emptyLabel={t("noRecentSamples")}
         />
-      </div>
+      </HistorySection>
     </div>
   );
 }

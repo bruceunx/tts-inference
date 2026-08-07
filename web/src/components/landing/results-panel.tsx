@@ -7,6 +7,7 @@ import { AudioPlayer } from "@/components/landing/audio-player";
 import { useSimulatedProgress } from "@/lib/use-simulated-progress";
 import { Loader2 } from "lucide-react";
 import { AudioHistory } from "@/components/landing/audio-history";
+import { HistorySection } from "./history-section";
 
 export function ResultsPanel({
   generating,
@@ -25,7 +26,7 @@ export function ResultsPanel({
   return (
     <div className="flex h-full flex-col rounded-xl border border-border bg-card p-5">
       <h3 className="text-lg font-semibold">{t("resultsTitle")}</h3>
-      <div className="mt-4 flex flex-1 items-center justify-center">
+      <div className="mt-4 flex flex-1 items-start justify-center">
         {generating ? (
           <div className="flex w-full flex-col items-center gap-3 text-center">
             <Loader2 className="size-6 animate-spin text-primary" />
@@ -63,17 +64,17 @@ export function ResultsPanel({
           </div>
         )}
       </div>
-      <div className="mt-4 border-t border-border pt-4">
-        <p className="mb-2 text-xs font-medium text-muted-foreground">
-          {t("recentGenerations")}
-        </p>
+      <HistorySection
+        title={t("recentGenerations")}
+        count={history.entries.length}
+      >
         <AudioHistory
           entries={history.entries}
           onRemoveAction={history.remove}
           showDownload
           emptyLabel={t("noRecentGenerations")}
         />
-      </div>
+      </HistorySection>
     </div>
   );
 }
