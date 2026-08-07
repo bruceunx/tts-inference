@@ -6,6 +6,11 @@ import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { AudioPlayer } from "@/components/landing/audio-player";
 import type { AudioEntry } from "@/lib/audio-db";
+import { MODEL_IDS, ModelId } from "@/lib/tts-config";
+
+function isModelId(tag: string | undefined): tag is ModelId {
+  return !!tag && (MODEL_IDS as readonly string[]).includes(tag);
+}
 
 export function AudioHistory({
   entries,
@@ -23,6 +28,7 @@ export function AudioHistory({
   emptyLabel: string;
 }) {
   const t = useTranslations("Workspace");
+  const tm = useTranslations("Models");
   const format = useFormatter();
 
   if (entries.length === 0)
@@ -48,9 +54,16 @@ export function AudioHistory({
                   #{index + 1}
                 </span>
                 <div className="min-w-0">
-                  <p className="truncate text-xs font-medium text-muted-foreground">
-                    {entry.name}
-                  </p>
+                  <div className="flex items-center gap-1.5">
+                    <p className="truncate text-xs font-medium text-muted-foreground">
+                      {entry.name}
+                    </p>
+                    {isModelId(entry.tag) && (
+                      <span className="shrink-0 rounded bg-primary/10 px-1.5 py-0.5 text-[10px] font-medium text-primary">
+                        {tm(`${entry.tag}.name`)}
+                      </span>
+                    )}
+                  </div>
                   <p className="text-[11px] text-muted-foreground/70">
                     {format.dateTime(new Date(entry.createdAt), {
                       dateStyle: "short",

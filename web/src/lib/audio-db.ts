@@ -8,6 +8,7 @@ export type AudioEntry = {
   name: string;
   blob: Blob;
   createdAt: number;
+  tag?: string;
 };
 
 function openDb(): Promise<IDBDatabase> {

@@ -63,6 +63,7 @@ export function Workspace() {
       generatedHistory.add(
         `${script.slice(0, 24).trim() || "output"}.wav`,
         blob,
+        model,
       );
     } catch (err) {
       if (err instanceof DOMException && err.name === "AbortError") {
