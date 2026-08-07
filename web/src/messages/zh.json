@@ -45,6 +45,7 @@
     "scriptPlaceholder": "输入或粘贴要合成的文本…",
     "charCountWords": "{count} / {max} 词",
     "charCountChars": "{count} / {max} 字",
+    "languageMismatch": "该模型不支持中文 — 请切换到英语 & 中文模型",
     "modelTitle": "模型",
     "generate": "生成语音",
     "generating": "生成中…"

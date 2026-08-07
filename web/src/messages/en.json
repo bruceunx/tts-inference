@@ -45,6 +45,7 @@
     "scriptPlaceholder": "Type or paste the text you want spoken...",
     "charCountWords": "{count} / {max} words",
     "charCountChars": "{count} / {max} chars",
+    "languageMismatch": "This model doesn't support Chinese — switch to English & Chinese",
     "modelTitle": "Model",
     "generate": "Generate speech",
     "generating": "Generating…"

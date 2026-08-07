@@ -20,7 +20,7 @@ tr:
 		-m ./model/ggml-base.bin \
 		-f ./input/johnlee.wav \
 		--output-txt \
-		--output-file ./output/johnlee_ref.txt
+		--output-file ./output/johnlee_ref
 
 # zh:
 # 	./bin/crispasr -m ./model/qwen3-tts-12hz-1.7b-base-q8_0.gguf \

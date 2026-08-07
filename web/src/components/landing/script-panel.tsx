@@ -4,8 +4,8 @@ import { useTranslations } from "next-intl";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { ModelSelect } from "@/components/landing/model-select";
-import { MODEL_LIMITS, type ModelId } from "@/lib/tts-config";
-import { countScript } from "@/lib/text-count";
+import { MODEL_LIMITS, MODEL_IDS, type ModelId } from "@/lib/tts-config";
+import { countScript, containsCJK } from "@/lib/text-count";
 
 export function ScriptPanel({
   script,
@@ -25,9 +25,10 @@ export function ScriptPanel({
   onGenerateAction: () => void;
 }) {
   const t = useTranslations("Workspace");
-  const limit = MODEL_LIMITS[model];
+  const limit = MODEL_LIMITS[model] ?? MODEL_LIMITS[MODEL_IDS[0]];
   const count = countScript(script, limit.unit);
   const overLimit = count > limit.max;
+  const languageMismatch = model === "en" && containsCJK(script);
 
   return (
     <div className="rounded-xl border border-border bg-card p-5">
@@ -57,6 +58,9 @@ export function ScriptPanel({
           max: limit.max,
         })}
       </p>
+      {languageMismatch && (
+        <p className="mt-1 text-xs text-destructive">{t("languageMismatch")}</p>
+      )}
 
       <div className="mt-4 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
         <div className="flex-1">
@@ -64,7 +68,7 @@ export function ScriptPanel({
           <ModelSelect value={model} onChangeAction={onModelChangeAction} />
         </div>
         <Button
-          disabled={disabled || generating || overLimit}
+          disabled={disabled || generating || overLimit || languageMismatch}
           onClick={onGenerateAction}
           className="sm:w-auto"
         >
