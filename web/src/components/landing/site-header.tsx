@@ -11,11 +11,13 @@ export function SiteHeader() {
     <header className="sticky top-0 z-20 border-b border-border/60 bg-background/80 backdrop-blur-sm">
       <div className="mx-auto flex h-14 max-w-6xl items-center justify-between px-4">
         <div className="flex items-center gap-2 font-semibold tracking-tight">
-          <Waveform
-            className="h-4"
-            barClassName="animate-[waveform_1.8s_ease-in-out_infinite]"
-          />
-          Timbre
+          <Link href="/" className="flex flex-row items-center gap-2">
+            <Waveform
+              className="h-4"
+              barClassName="animate-[waveform_1.8s_ease-in-out_infinite]"
+            />
+            Timbre
+          </Link>
         </div>
 
         <nav className="hidden items-center gap-6 text-sm text-muted-foreground sm:flex">
