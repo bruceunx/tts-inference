@@ -51,6 +51,9 @@
     "generating": "Generating…"
   },
   "Models": {
+    "pageTitle": "Models",
+    "pageSub": "Two built-in models, each tuned for a different use case.",
+    "limitLabel": "Up to {max} {unit, select, words {words} other {characters}} per script",
     "en": {
       "name": "English",
       "tag": "Fast & stable",
@@ -60,6 +63,30 @@
       "name": "English & Chinese",
       "tag": "Bilingual",
       "desc": "Cross-lingual cloning for English and Chinese scripts."
+    }
+  },
+  "Docs": {
+    "pageTitle": "Docs",
+    "pageSub": "How Timbre's voice cloning and generation flow works.",
+    "gettingStarted": {
+      "title": "Getting started",
+      "body": "Add a voice sample by uploading a file or recording from your microphone, write the script you want spoken, choose a model, and generate."
+    },
+    "voiceSample": {
+      "title": "Voice sample",
+      "body": "Samples must be MP3 or WAV, between 1 and 30 seconds long. Uploaded and recorded audio is automatically converted to 24kHz WAV before generation."
+    },
+    "script": {
+      "title": "Script",
+      "body": "Each model has its own length limit — the English model counts words, the bilingual model counts characters, since word-splitting doesn't apply cleanly to Chinese text."
+    },
+    "models": {
+      "title": "Models",
+      "body": "The English model is tuned for low-latency English-only generation. The bilingual model supports both English and Chinese in the same script."
+    },
+    "limits": {
+      "title": "Limits",
+      "body": "Generation runs on a single request at a time per session and may take longer for the bilingual model, which also transcribes the voice sample as a reference before generating."
     }
   }
 }

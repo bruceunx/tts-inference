@@ -1,4 +1,6 @@
 ## TODO
 
-- [ ] add progress bar for generating
-- [ ] fix word count for Model switch bug
+- [x] add progress bar for generating
+- [x] fix word count for Model switch bug
+- [ ] finished other pages
+- [ ] add footer
