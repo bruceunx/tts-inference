@@ -22,13 +22,10 @@ export function useAudioHistory(store: StoreName) {
 
   const add = useCallback(
     async (name: string, blob: Blob) => {
-      await addEntry(store, {
-        id: crypto.randomUUID(),
-        name,
-        blob,
-        createdAt: Date.now(),
-      });
+      const id = crypto.randomUUID();
+      await addEntry(store, { id, name, blob, createdAt: Date.now() });
       await refresh();
+      return id;
     },
     [store, refresh],
   );

@@ -22,9 +22,13 @@ export function Workspace() {
   const referenceHistory = useAudioHistory("reference");
   const generatedHistory = useAudioHistory("generated");
 
-  function handleSampleChange(next: VoiceSample | null) {
+  async function handleSampleChange(next: VoiceSample | null) {
+    if (next && !next.id) {
+      const id = await referenceHistory.add(next.name, next.blob);
+      setSample({ ...next, id });
+      return;
+    }
     setSample(next);
-    if (next && !next.id) referenceHistory.add(next.name, next.blob);
   }
 
   async function handleGenerate() {
