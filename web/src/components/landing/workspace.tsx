@@ -7,7 +7,7 @@ import {
 } from "@/components/landing/voice-source-panel";
 import { ResultsPanel } from "@/components/landing/results-panel";
 import { ScriptPanel } from "@/components/landing/script-panel";
-import type { ModelId } from "@/lib/tts-config";
+import { GENERATE_TIMEOUT_MS, type ModelId } from "@/lib/tts-config";
 
 export function Workspace() {
   const [sample, setSample] = useState<VoiceSample | null>(null);
@@ -30,7 +30,7 @@ export function Workspace() {
     form.append("model", model);
 
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), 65_000);
+    const timer = setTimeout(() => controller.abort(), GENERATE_TIMEOUT_MS);
 
     try {
       const res = await fetch("/api/generate", {

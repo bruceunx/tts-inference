@@ -1,6 +1,8 @@
 export const MODEL_IDS = ["en", "multi"] as const;
 export type ModelId = (typeof MODEL_IDS)[number];
 
+export const GENERATE_TIMEOUT_MS = 90_0000;
+
 export const MODEL_LIMITS: Record<
   ModelId,
   { max: number; unit: "words" | "chars" }
@@ -11,7 +13,12 @@ export const MODEL_LIMITS: Record<
 
 export const MODEL_CONFIGS: Record<
   ModelId,
-  { backend: string; model: string; codecModel?: string }
+  {
+    backend: string;
+    model: string;
+    codecModel?: string;
+    needsRefText?: boolean;
+  }
 > = {
   en: {
     backend: "chatterbox-turbo",
@@ -21,5 +28,8 @@ export const MODEL_CONFIGS: Record<
   multi: {
     backend: "qwen3-tts-1.7b-base",
     model: "qwen3-tts-12hz-1.7b-base-q8_0.gguf",
+    needsRefText: true,
   },
 };
+
+export const WHISPER_MODEL_FILE = "ggml-base.bin";
