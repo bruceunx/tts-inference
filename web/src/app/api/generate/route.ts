@@ -75,7 +75,6 @@ export async function POST(req: NextRequest) {
 
     await run(BIN, args, GENERATE_TIMEOUT_MS);
     const audio = await readFile(outputPath);
-    console.log("audio", outputPath);
     return new NextResponse(audio, {
       headers: {
         "Content-Type": "audio/wav",
