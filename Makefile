@@ -14,7 +14,12 @@ run:
                 --accept-marking-responsibility \
                 --tts "$$(cat ./scripts/emotion.txt)" \
                 --tts-output ./output/chatterboxdj.wav
-
+tr:
+	./bin/crispasr \
+		--backend whisper \
+		-m ./model/ggml-base.bin \
+		-f ./input/johnlee_24k.wav \
+		--output-txt ./output/johnlee_ref.txt
 
 # zh:
 # 	./bin/crispasr -m ./model/qwen3-tts-12hz-1.7b-base-q8_0.gguf \
@@ -32,29 +37,12 @@ run:
 #                 --tts "$$(cat ./scripts/emotion.txt)" \
 #                 --tts-output ./output/emotionqwen.wav
 #
-# zh1:
-# 	./bin/crispasr -m ./model/darwin-tts-1.7b-cross-q8_0.gguf \
-#                 --backend qwen3-tts \
-#                 --voice ./input/johnlee_24k.wav \
-#                 --i-have-rights \
-# 		            --ref-text "Captain figured, the sailor agreed, following Bartharus down and dogging the hatch behind him. You never know when the barbarians are going to go nuts. I don't know how you fellas can take it, he assured, shaking his head. They aren't so bad once you get to know them, Bartharus suggested. And the food is good, if spicy. But it was time for us to go, for now. Where is the captain?" \
-# 	              --no-prints \
-# 		            --no-spoken-disclaimer \
-# 		            --no-watermark \
-#                 --no-c2pa \
-#                 --accept-marking-responsibility \
-# 		            --temperature 0.4 \
-#                 --instruct "clear tone, crisp voice, bright studio articulation" \
-#                 --tts "$$(cat ./scripts/emotion.txt)" \
-#                 --tts-output ./output/emotiondarwin.wav
 
-
-zh:
-	./bin/crispasr -m ./model/voxcpm2-q8_0.gguf \
-                --backend voxcpm2-tts \
+zh1:
+	time ./bin/crispasr -m ./model/darwin-tts-1.7b-cross-q8_0.gguf \
+                --backend qwen3-tts \
                 --voice ./input/johnlee_24k.wav \
                 --i-have-rights \
-		            --ref-text "Captain figured, the sailor agreed, following Bartharus down and dogging the hatch behind him. You never know when the barbarians are going to go nuts. I don't know how you fellas can take it, he assured, shaking his head. They aren't so bad once you get to know them, Bartharus suggested. And the food is good, if spicy. But it was time for us to go, for now. Where is the captain?" \
 	              --no-prints \
 		            --no-spoken-disclaimer \
 		            --no-watermark \
@@ -63,18 +51,34 @@ zh:
 		            --temperature 0.4 \
                 --instruct "clear tone, crisp voice, bright studio articulation" \
                 --tts "$$(cat ./scripts/ch.txt)" \
-                --tts-output ./output/chvox.wav
+                --tts-output ./output/chdarwin.wav
 
 
-s2:
-	./bin/s2 \
-		-m ./model/s2-pro-q2_k.gguf \
-		-t ./model/tokenizer.json \
-		-pa ./input/johnlee_24k.wav \
-		-pt "Captain figured, the sailor agreed, following Bartharus down and dogging the hatch behind him. You never know when the barbarians are going to go nuts. I don't know how you fellas can take it, he assured, shaking his head. They aren't so bad once you get to know them, Bartharus suggested. And the food is good, if spicy. But it was time for us to go, for now. Where is the captain?" \
-		-text "$$(cat ./scripts/emotion.txt)" \
-		--metal \
-		-o ./output/emotions2.wav
+# zh:
+# 	time ./bin/crispasr -m ./model/voxcpm2-q8_0.gguf \
+#                 --backend voxcpm2-tts \
+#                 --voice ./input/johnlee_24k.wav \
+#                 --i-have-rights \
+# 	              --no-prints \
+# 		            --no-spoken-disclaimer \
+# 		            --no-watermark \
+#                 --no-c2pa \
+#                 --accept-marking-responsibility \
+# 		            --temperature 0.4 \
+#                 --instruct "clear tone, crisp voice, bright studio articulation" \
+#                 --tts "$$(cat ./scripts/ch.txt)" \
+#                 --tts-output ./output/chvox.wav
+
+
+# s2:
+# 	./bin/s2 \
+# 		-m ./model/s2-pro-q2_k.gguf \
+# 		-t ./model/tokenizer.json \
+# 		-pa ./input/johnlee_24k.wav \
+# 		-pt "Captain figured, the sailor agreed, following Bartharus down and dogging the hatch behind him. You never know when the barbarians are going to go nuts. I don't know how you fellas can take it, he assured, shaking his head. They aren't so bad once you get to know them, Bartharus suggested. And the food is good, if spicy. But it was time for us to go, for now. Where is the captain?" \
+# 		-text "$$(cat ./scripts/emotion.txt)" \
+# 		--metal \
+# 		-o ./output/emotions2.wav
 
 
 help:

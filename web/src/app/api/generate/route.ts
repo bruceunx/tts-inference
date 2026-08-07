@@ -45,7 +45,6 @@ export async function POST(req: NextRequest) {
   const voicePath = path.join(dir, voice.name || "voice.wav");
   const outputPath = path.join(dir, "output.wav");
   await writeFile(voicePath, Buffer.from(await voice.arrayBuffer()));
-  console.log("voice path", voicePath, outputPath);
 
   const args = [
     "-m",
@@ -65,6 +64,8 @@ export async function POST(req: NextRequest) {
     "--tts-output",
     outputPath,
   ];
+
+  console.log("args", args);
   if (config.codecModel)
     args.push("--codec-model", path.join(MODEL_DIR, config.codecModel));
 
