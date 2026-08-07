@@ -48,7 +48,11 @@
     "languageMismatch": "该模型不支持中文 — 请切换到英语 & 中文模型",
     "modelTitle": "模型",
     "generate": "生成语音",
-    "generating": "生成中…"
+    "generating": "生成中…",
+    "recentSamples": "最近样本",
+    "noRecentSamples": "暂无最近样本",
+    "recentGenerations": "最近生成",
+    "noRecentGenerations": "暂无最近生成"
   },
   "Models": {
     "pageTitle": "模型",

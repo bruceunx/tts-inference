@@ -1,5 +1,7 @@
 "use client";
+import type { AudioEntry } from "@/lib/audio-db";
 
+import { AudioHistory } from "@/components/landing/audio-history";
 import { useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import { Mic, Square, UploadCloud, X } from "lucide-react";
@@ -19,11 +21,13 @@ export function VoiceSourcePanel({
   onSampleChangeAction,
   recording,
   onRecordingChangeAction,
+  history,
 }: {
   sample: VoiceSample | null;
   onSampleChangeAction: (sample: VoiceSample | null) => void;
   recording: boolean;
   onRecordingChangeAction: (recording: boolean) => void;
+  history: { entries: AudioEntry[]; remove: (id: string) => void };
 }) {
   const t = useTranslations("Workspace");
   const [tab, setTab] = useState<Tab>("upload");
@@ -211,6 +215,19 @@ export function VoiceSourcePanel({
         <p className="mt-2 text-xs text-destructive">{sampleError}</p>
       )}
       {micError && <p className="mt-2 text-xs text-destructive">{micError}</p>}
+      <div className="mt-4 border-t border-border pt-4">
+        <p className="mb-2 text-xs font-medium text-muted-foreground">
+          {t("recentSamples")}
+        </p>
+        <AudioHistory
+          entries={history.entries}
+          onRemoveAction={history.remove}
+          onSelectAction={(entry) =>
+            onSampleChangeAction({ name: entry.name, blob: entry.blob })
+          }
+          emptyLabel={t("noRecentSamples")}
+        />
+      </div>
     </div>
   );
 }

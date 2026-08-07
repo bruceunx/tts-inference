@@ -8,6 +8,7 @@ import {
 import { ResultsPanel } from "@/components/landing/results-panel";
 import { ScriptPanel } from "@/components/landing/script-panel";
 import { GENERATE_TIMEOUT_MS, type ModelId } from "@/lib/tts-config";
+import { useAudioHistory } from "@/lib/use-audio-history";
 
 export function Workspace() {
   const [sample, setSample] = useState<VoiceSample | null>(null);
@@ -17,6 +18,14 @@ export function Workspace() {
   const [generating, setGenerating] = useState(false);
   const [result, setResult] = useState<Blob | null>(null);
   const [error, setError] = useState<string | null>(null);
+
+  const referenceHistory = useAudioHistory("reference");
+  const generatedHistory = useAudioHistory("generated");
+
+  function handleSampleChange(next: VoiceSample | null) {
+    setSample(next);
+    if (next) referenceHistory.add(next.name, next.blob);
+  }
 
   async function handleGenerate() {
     if (!sample) return;
@@ -30,7 +39,10 @@ export function Workspace() {
     form.append("model", model);
 
     const controller = new AbortController();
-    const timer = setTimeout(() => controller.abort(), GENERATE_TIMEOUT_MS);
+    const timer = setTimeout(
+      () => controller.abort(),
+      GENERATE_TIMEOUT_MS + 5_000,
+    );
 
     try {
       const res = await fetch("/api/generate", {
@@ -42,7 +54,12 @@ export function Workspace() {
         const body = await res.json().catch(() => ({}));
         throw new Error(body.error ?? `request failed (${res.status})`);
       }
-      setResult(await res.blob());
+      const blob = await res.blob();
+      setResult(blob);
+      generatedHistory.add(
+        `${script.slice(0, 24).trim() || "output"}.wav`,
+        blob,
+      );
     } catch (err) {
       if (err instanceof DOMException && err.name === "AbortError") {
         setError("Generation timed out");
@@ -56,15 +73,21 @@ export function Workspace() {
   }
 
   return (
-    <section id="workspace" className="mx-auto max-w-5xl w-full px-4 pb-24">
+    <section id="workspace" className="mx-auto w-full max-w-5xl px-4 pb-24">
       <div className="grid gap-4 sm:grid-cols-2">
         <VoiceSourcePanel
           sample={sample}
-          onSampleChangeAction={setSample}
+          onSampleChangeAction={handleSampleChange}
           recording={recording}
           onRecordingChangeAction={setRecording}
+          history={referenceHistory}
         />
-        <ResultsPanel generating={generating} result={result} error={error} />
+        <ResultsPanel
+          generating={generating}
+          result={result}
+          error={error}
+          history={generatedHistory}
+        />
       </div>
       <div className="mt-4">
         <ScriptPanel

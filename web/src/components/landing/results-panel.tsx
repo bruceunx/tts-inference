@@ -1,19 +1,23 @@
 "use client";
 
+import type { AudioEntry } from "@/lib/audio-db";
 import { useTranslations } from "next-intl";
 import { Waveform } from "@/components/landing/waveform";
 import { AudioPlayer } from "@/components/landing/audio-player";
 import { useSimulatedProgress } from "@/lib/use-simulated-progress";
 import { Loader2 } from "lucide-react";
+import { AudioHistory } from "@/components/landing/audio-history";
 
 export function ResultsPanel({
   generating,
   result,
   error,
+  history,
 }: {
   generating: boolean;
   result: Blob | null;
   error: string | null;
+  history: { entries: AudioEntry[]; remove: (id: string) => void };
 }) {
   const t = useTranslations("Workspace");
   const progress = useSimulatedProgress(generating);
@@ -58,6 +62,16 @@ export function ResultsPanel({
             </p>
           </div>
         )}
+      </div>
+      <div className="mt-4 border-t border-border pt-4">
+        <p className="mb-2 text-xs font-medium text-muted-foreground">
+          {t("recentGenerations")}
+        </p>
+        <AudioHistory
+          entries={history.entries}
+          onRemoveAction={history.remove}
+          emptyLabel={t("noRecentGenerations")}
+        />
       </div>
     </div>
   );

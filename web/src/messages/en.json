@@ -48,7 +48,11 @@
     "languageMismatch": "This model doesn't support Chinese — switch to English & Chinese",
     "modelTitle": "Model",
     "generate": "Generate speech",
-    "generating": "Generating…"
+    "generating": "Generating…",
+    "recentSamples": "Recent samples",
+    "noRecentSamples": "No recent samples",
+    "recentGenerations": "Recent generations",
+    "noRecentGenerations": "No recent generations"
   },
   "Models": {
     "pageTitle": "Models",
