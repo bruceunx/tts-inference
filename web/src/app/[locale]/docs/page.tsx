@@ -1,5 +1,6 @@
 import { getTranslations } from "next-intl/server";
 import { SiteHeader } from "@/components/landing/site-header";
+import { Footer } from "@/components/landing/footer";
 
 export default async function DocsPage() {
   const t = await getTranslations("Docs");
@@ -32,6 +33,7 @@ export default async function DocsPage() {
           ))}
         </div>
       </div>
+      <Footer />
     </main>
   );
 }

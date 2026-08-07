@@ -88,5 +88,10 @@
       "title": "Limits",
       "body": "Generation runs on a single request at a time per session and may take longer for the bilingual model, which also transcribes the voice sample as a reference before generating."
     }
+  },
+  "Footer": {
+    "tagline": "Self-hosted voice cloning, running on your own hardware.",
+    "github": "GitHub",
+    "version": "v{version}"
   }
 }

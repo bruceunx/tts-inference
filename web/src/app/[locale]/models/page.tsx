@@ -1,6 +1,7 @@
 import { getTranslations } from "next-intl/server";
 import { SiteHeader } from "@/components/landing/site-header";
 import { MODEL_IDS, MODEL_LIMITS } from "@/lib/tts-config";
+import { Footer } from "@/components/landing/footer";
 
 export default async function ModelsPage() {
   const t = await getTranslations("Models");
@@ -39,6 +40,7 @@ export default async function ModelsPage() {
           })}
         </div>
       </div>
+      <Footer />
     </main>
   );
 }

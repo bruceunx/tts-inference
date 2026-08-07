@@ -1,6 +1,7 @@
 import { SiteHeader } from "@/components/landing/site-header";
 import { Hero } from "@/components/landing/hero";
 import { Workspace } from "@/components/landing/workspace";
+import { Footer } from "@/components/landing/footer";
 
 export default function Home() {
   return (
@@ -8,6 +9,7 @@ export default function Home() {
       <SiteHeader />
       <Hero />
       <Workspace />
+      <Footer />
     </main>
   );
 }
