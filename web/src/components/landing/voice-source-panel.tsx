@@ -221,6 +221,7 @@ export function VoiceSourcePanel({
         </p>
         <AudioHistory
           entries={history.entries}
+          activeId={sample?.id}
           onRemoveAction={history.remove}
           onSelectAction={(entry) =>
             onSampleChangeAction({
