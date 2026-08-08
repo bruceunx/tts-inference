@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "biome check",
+    "setup": "node scripts/setup.mjs",
     "format": "biome format --write"
   },
   "dependencies": {
