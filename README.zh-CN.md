@@ -4,6 +4,9 @@
 
 基于 [CrispASR](https://github.com/CrispStrobe/CrispASR)（C++ ggml 推理引擎）的语音合成与声音克隆工具，配有 Next.js Web 界面。
 
+> [!NOTE]
+> **完全免费、开源、自托管。** 无需订阅，无需 API key，不按请求计费，没有每日/每月额度限制，没有积分系统 —— 因为它完全运行在你自己的设备上。只要硬件性能足够，想生成多少就生成多少。
+
 <p align="center">
   <img src="docs/screen1.png" alt="Timbre Screenshot 1" width="450">
   <img src="docs/screen2.png" alt="Timbre Screenshot 2" width="450">

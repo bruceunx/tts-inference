@@ -4,6 +4,9 @@
 
 Text-to-speech and voice cloning, built on [CrispASR](https://github.com/CrispStrobe/CrispASR) (C++ ggml inference engine) with a Next.js web UI.
 
+> [!NOTE]
+> 100% free and open-source, self-hosted. No subscription, no API keys, no per-request billing, no daily/monthly quota, no credit system — because it runs entirely on your own machine. Generate as much as your own hardware can handle.
+
 <p align="center">
   <img src="docs/screen1.png" alt="Timbre Screenshot 1" width="450">
   <img src="docs/screen2.png" alt="Timbre Screenshot 2" width="450">
