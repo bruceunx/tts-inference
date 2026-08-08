@@ -1,3 +1,5 @@
+[English](./README.md) | [中文](./README.zh-CN.md)
+
 # Timbre — TTS Inference
 
 Text-to-speech and voice cloning, built on [CrispASR](https://github.com/CrispStrobe/CrispASR) (C++ ggml inference engine) with a Next.js web UI.
