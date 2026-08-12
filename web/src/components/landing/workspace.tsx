@@ -6,9 +6,9 @@ import {
   type VoiceSample,
 } from "@/components/landing/voice-source-panel";
 import { ResultsPanel } from "@/components/landing/results-panel";
-import { ScriptPanel } from "@/components/landing/script-panel";
 import { GENERATE_TIMEOUT_MS, type ModelId } from "@/lib/tts-config";
 import { useAudioHistory } from "@/lib/use-audio-history";
+import { ScriptPanel } from "./script-panel";
 
 export function Workspace() {
   const [sample, setSample] = useState<VoiceSample | null>(null);
