@@ -37,22 +37,37 @@ export function ScriptPanel({
   const [tab, setTab] = useState<Tab>("write");
   const [dragOver, setDragOver] = useState(false);
   const [fileError, setFileError] = useState<string | null>(null);
+  const [extracting, setExtracting] = useState(false);
   const inputRef = useRef<HTMLInputElement>(null);
 
   async function handleFiles(files: FileList | null) {
     const file = files?.[0];
     if (!file) return;
-    if (!file.name.toLowerCase().endsWith(".txt")) {
+    const ext = file.name.split(".").pop()?.toLowerCase();
+    if (!ext || !["txt", "pdf", "epub"].includes(ext)) {
       setFileError(t("scriptFormatError"));
       return;
     }
+    setExtracting(true);
+    setFileError(null);
     try {
-      const text = await file.text();
-      setFileError(null);
+      const form = new FormData();
+      form.append("file", file);
+      const res = await fetch("/api/extract-text", {
+        method: "POST",
+        body: form,
+      });
+      if (!res.ok) throw new Error();
+      const doc = (await res.json()) as {
+        chapters: { title: string; text: string }[];
+      };
+      const text = doc.chapters.map((c) => c.text).join("\n\n");
       onScriptChangeAction(text);
       setTab("write");
     } catch {
       setFileError(t("scriptFormatError"));
+    } finally {
+      setExtracting(false);
     }
   }
 
@@ -95,6 +110,7 @@ export function ScriptPanel({
         ) : (
           <button
             type="button"
+            disabled={extracting}
             onClick={() => inputRef.current?.click()}
             onDragOver={(e) => {
               e.preventDefault();
@@ -107,21 +123,23 @@ export function ScriptPanel({
               handleFiles(e.dataTransfer.files);
             }}
             className={cn(
-              "flex w-full flex-1 flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed px-4 py-10 text-center transition-colors",
+              "flex w-full flex-1 flex-col items-center justify-center gap-2 rounded-lg border-2 border-dashed px-4 py-10 text-center transition-colors disabled:opacity-60",
               dragOver
                 ? "border-primary bg-primary/5"
                 : "border-border hover:border-foreground/30",
             )}
           >
             <UploadCloud className="size-6 text-muted-foreground" />
-            <p className="text-sm font-medium">{t("scriptDropTitle")}</p>
+            <p className="text-sm font-medium">
+              {extracting ? t("scriptExtracting") : t("scriptDropTitle")}
+            </p>
             <p className="text-xs text-muted-foreground">
               {t("scriptDropSub")}
             </p>
             <input
               ref={inputRef}
               type="file"
-              accept=".txt,text/plain"
+              accept=".txt,.pdf,.epub,text/plain,application/pdf,application/epub+zip"
               className="hidden"
               onChange={(e) => handleFiles(e.target.files)}
             />
